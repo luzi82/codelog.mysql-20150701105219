@@ -4,4 +4,14 @@ set -e
 
 . ./_conf.sh
 
-${MYSQL_CMD} -e "EXPLAIN SELECT * FROM t0 ORDER BY c0 LIMIT 1"
+function sql {
+	echo "${1}"
+	${MYSQL_CMD} -e "${1}"
+	echo ""
+}
+
+sql "EXPLAIN SELECT * FROM t0 ORDER BY c0 LIMIT 1"
+sql "EXPLAIN SELECT * FROM t0 ORDER BY c1 LIMIT 1"
+sql "EXPLAIN SELECT * FROM t0 WHERE c0 = 73 ORDER BY c1 LIMIT 1"
+sql "EXPLAIN SELECT MIN(c1) FROM t0 WHERE c0 = 73"
+sql "EXPLAIN SELECT * FROM t0 WHERE c0 = 73 AND c1 = (SELECT MIN(c1) FROM t0 WHERE c0 = 73) LIMIT 1"
